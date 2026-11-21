@@ -1,0 +1,9 @@
+{
+  "version": "2.0.1",
+  "incumbent_run": "representation-v2-001",
+  "representation": "autoresearch/representation-v2-001/representation.npz",
+  "selection": "autoresearch/representation-v2-001/selection.json",
+  "promotion": "autoresearch/representation-v2-001/promotion.json",
+  "next_search_requirement": "Compare against this incumbent on a separately specified, unexposed audit namespace",
+  "scope": "Synthetic fixed-budget linear reconstruction"
+}

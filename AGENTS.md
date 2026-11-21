@@ -62,7 +62,7 @@ compression than decoding on an unconstrained ambient latent.
 
 ### Version 2 entry points
 
-The current code version is **2.0.0**. Start with `docs/00-DESIGN.md`,
+The current code version is **2.0.1**. Start with `docs/00-DESIGN.md`,
 `docs/v2-migration.md` and `docs/paper/ald-sc-v2.tex` for the current design.
 `SpectralVAE` now requires its frozen prior at construction and eagerly creates
 the graph decoder. Modal gates (`heat`, `envelope`, `prime`, `phase-00` through
@@ -97,6 +97,9 @@ improvement does not earn a patch version. Preserve every trial log and failed
 comparison. Once an audit is inspected, do not tune on it and call it fresh.
 Subsequent searches must name the promoted incumbent and an unexposed audit
 namespace in their protocol.
+`autoresearch/current.json` identifies the current research incumbent.
+Promotion receipts bind captured source hashes to the exact experiment-source
+commit; a later package-version bump does not rewrite that experimental history.
 
 Use the Mec-iS GitHub account and commit attribution for this repository, as
 requested on 2026-11-21. Push changes on a branch and open a pull request.

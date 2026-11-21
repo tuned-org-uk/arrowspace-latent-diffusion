@@ -47,3 +47,10 @@ The separate protocol is at repository-root `autoresearch.md`.
 The baseline includes the calibrated-metric implementation and bounded search
 runner. Successful search outcomes are published separately as patch versions,
 with the sealed selection and fresh audit attached to each promotion.
+
+The first promotion is v2.0.1: 96 evaluations, 95 distinct exact basis/gain hash
+pairs, and a fresh audit balanced MSE ratio of 0.971657. The original graph basis
+with training-fitted diagonal gains won the declared objective. The encoded
+subspace did not change. The smooth-regime regression and broadband improvement
+are both preserved in `autoresearch/representation-v2-001/`.
+The promotion records the published v2.0.0 source commit explicitly.

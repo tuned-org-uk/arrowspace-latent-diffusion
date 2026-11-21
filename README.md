@@ -1,4 +1,4 @@
-# Arrowspace Latent Diffusion (ALD-SC) v2.0.0
+# Arrowspace Latent Diffusion (ALD-SC) v2.0.1
 
 **ArrowSpace Latent Diffusion with Spectral Chart Conditioning** — a
 spectral latent diffusion model in which decoding is performed on the
@@ -63,6 +63,17 @@ signals, selects on development signals, seals the choice, and then audits it.
 The loop supports up to 96 evaluations and records every keep/discard decision
 in `autoresearch.jsonl`. Successful runs are published as patch versions after
 the baseline; each must retain its fresh audit and any regime regressions.
+
+The [first promoted run](autoresearch/representation-v2-001/results.md) is
+`v2.0.1`: it retains the graph basis and fits diagonal decoder gains.
+Fresh-audit balanced MSE improved by 2.83%, with a 1.49% smooth-regime regression
+and a 7.16% broadband improvement. The smooth regression passed the predefined
+2% guard. This is a filtering result on synthetic signals, not evidence of a
+better encoded subspace or a trained image model.
+
+[`autoresearch/current.json`](autoresearch/current.json) identifies the research
+incumbent. The promotion receipt pins the v2.0.0 commit used to generate the
+experiment; its source hashes are checked against that historical commit.
 
 Run with `./autoresearch.sh`. Existing output and log paths are deliberately
 protected. Explicit new paths reproduce the same fixed seed streams:

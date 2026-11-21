@@ -4,7 +4,7 @@
     "numpy": "2.5.1",
     "platform": "Darwin",
     "machine": "arm64",
-    "base_commit": "690cf1c1248213b7781581e3da860bc9131c77a5",
+    "base_commit": "2879577485d5a25549009fa54f7e83bcc35962c2",
     "source_sha256": {
       "src/ald_sc/prime_gating.py": "26e3842e80e0d9a52df4e9fd522357e4408033313a6692ab96a6b89e34b763d0",
       "src/ald_sc/modal_gate.py": "a0b8df90b1316e8e6235021c5e6ff7055072fed336f6ccd094db5b87b0d16835",
@@ -12,16 +12,16 @@
       "src/ald_sc/vae.py": "4bb8ddbe0d1d7573d8f51d0c32817c68c1ec1f71380b1efbd3da63b956fa0bdd",
       "src/ald_sc/arrow_prior.py": "76d3b91243dccfc6d0bc2c1559304b46294a9d12aa8e38248f99c7bb67a76ade",
       "src/ald_sc/spectral_schedule.py": "b545c5198b8d1d5511d17630c9a820713c3225566b355b97ff1daa5810d283e2",
-      "src/ald_sc/__init__.py": "303122882851cec1d77496fc3ae66b4edcb44996c704299dc5d52ec77a80060a",
+      "src/ald_sc/__init__.py": "b82dee2f3d436e6a030c32912440ee73a4d243028fe03cb1d19b440c43f6cc76",
       "scripts/execute_v2_notebooks.py": "30a1af7ea97f7156eae1e75782cdba8478263ee51476cd8833ea95fff559d245",
       "scripts/run_prime_study.py": "455b8f7e6ca62b58f8d77b9397f06c89d6376695d9994f75a74cd982696a60bd",
       "docs/experiments/prime-gating-protocol.md": "f094b67eda90416a29eb9d0b253ac85d97d37da42d87ac21902a87e9529a503d",
-      "pyproject.toml": "3c004159549e9481694596b9317c8152256ef0769647dfe98af8a376299e8c47",
-      "uv.lock": "8fb4d91d3490b42ce7b4e3422136d28fc5061664062ded11e88d5b967db546da"
+      "pyproject.toml": "4784d4dac99a9e21814cdfc438073c1ad4e2a30035c7f267bb341f6a1bc283b2",
+      "uv.lock": "0fde3c2e018584c38807bd53153c404b9330b6503af86c0ff58879d7ac7910c5"
     },
     "notebook_input_sha256": {
-      "notebooks/01-v2-encoding-quality.ipynb": "9a4cfcd87b4a77fa9174e8d65961229c55f5c831f61db4913bdcb5c33cffee2a",
-      "notebooks/02-v2-prime-decoding.ipynb": "61316f2ae2854279147912cdc2257ef6fc18070be92346fe0e8cb300dadd9ef0"
+      "notebooks/01-v2-encoding-quality.ipynb": "c2cab872a7776a7d2a177fd3a4318f158e5b18515cb40e90c36a3c40180728d1",
+      "notebooks/02-v2-prime-decoding.ipynb": "08c3d9de70cf309b7b5b0b27d7864bbdd33aec73838c8ba1f2f22a3c89e1cbe3"
     },
     "raw_sha256": "2eb3293b830791c74329096d21f6533c9fca70fbd76bfc38d1a92b9cd4580a64",
     "raw_array_schema": {

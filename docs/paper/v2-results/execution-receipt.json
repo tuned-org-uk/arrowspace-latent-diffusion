@@ -1,5 +1,5 @@
 {
-  "completed_utc": "2026-11-21T17:31:42.173154+00:00",
+  "completed_utc": "2026-11-21T17:43:40.686448+00:00",
   "kernel_python": ".venv/bin/python",
   "packages": {
     "nbclient": "0.11.0",
@@ -10,11 +10,11 @@
   "notebooks": {
     "notebooks/01-v2-encoding-quality.ipynb": {
       "code_cells": 3,
-      "sha256": "dbf9f1f32e25194a72bffe6b12d8d0e3887d79686f818ad4953dfe9dadb88542"
+      "sha256": "f024d7e708427306343fda816f15be395cdca02a976dae0e21cba1a27b8b2e35"
     },
     "notebooks/02-v2-prime-decoding.ipynb": {
       "code_cells": 5,
-      "sha256": "e85fe9d020294487e9362e6a18516d0a4d822f242b77c83d89f93b48db751264"
+      "sha256": "8553a16ea83cd87db329c3de96e707e839a46b303c4112c64c242ef630b11aab"
     }
   },
   "artefact_sha256": {
@@ -26,7 +26,7 @@
     "docs/paper/v2-results/encoding-quality.png": "6546403f58a666fe77c1add10a302a27d5a913255af915f0b498fd552ecb075c",
     "docs/paper/v2-results/encoding-table.tex": "ca2e16f888496f3641e1678ede659f5901ac8291aa2da46152bf0bfca1a5ea42",
     "docs/paper/v2-results/raw-outcomes.npz": "2eb3293b830791c74329096d21f6533c9fca70fbd76bfc38d1a92b9cd4580a64",
-    "docs/paper/v2-results/results.json": "e369436809068ede1d4d85051ac3a159d7c065ca11560ecc8ea5799c15829c89"
+    "docs/paper/v2-results/results.json": "4e4e602380e2be07b8d213f5f162b6c4fe9c955e438161c84520321170d65ff9"
   },
   "status": "both full notebooks passed, including exporter parity and source hash checks"
 }

@@ -1,0 +1,166 @@
+{
+  "config": {
+    "seed": 3407,
+    "features": 128,
+    "rank": 64,
+    "n_train": 2048,
+    "n_dev": 2048,
+    "n_audit": 4096,
+    "max_trials": 96,
+    "n_boot": 2000,
+    "squared_gain_budget": 26.786642259389367
+  },
+  "trial_count": 96,
+  "distinct_basis_gain_hash_pairs": 95,
+  "trial_count_is_not_unique_representation_count": true,
+  "selection": {
+    "trial": 4,
+    "basis": "graph",
+    "recipe": {
+      "family": "training-fitted-quadratic"
+    },
+    "basis_recipe": {
+      "construction": "analytical-path"
+    },
+    "mse": {
+      "smooth": 0.06185902179226428,
+      "broadband": 0.6317890609122488
+    },
+    "score": 0.9720759133803665,
+    "eligible": true,
+    "decision": "keep",
+    "decision_reason": "improved eligible score",
+    "basis_hash": "986987cf28c591e5c3e93752203c7bb1c23b6f45fadb1496209ec282454734c2",
+    "gain_hash": "dbe65cc874ebe428a1c5cbd5fdfda06c46c62aa850c67a644bca2f647e59cc06",
+    "coefficient_count": 64,
+    "squared_gain_norm": 26.78664225938936,
+    "evaluation_seconds": 0.0004991249879822135,
+    "trial_count": 96,
+    "reference_dev_mse": {
+      "smooth": 0.06088980990623989,
+      "broadband": 0.6806352923038091
+    }
+  },
+  "audit": {
+    "selection_was_sealed": true,
+    "selection_sha256": "b9ee112c73a5233e4884c556a80ce99641cd416c0ae457fc6e263e03bf5cea29",
+    "rows": {
+      "smooth": {
+        "heat_mse": 0.06079294029229314,
+        "selected_mse": 0.061698080551967724,
+        "delta_mse": 0.0009051402596745816,
+        "ci_low": 0.0007887106205968058,
+        "ci_high": 0.0010306764179280783
+      },
+      "broadband": {
+        "heat_mse": 0.6821759724208217,
+        "selected_mse": 0.6333487038908245,
+        "delta_mse": -0.04882726852999718,
+        "ci_low": -0.04932482699397014,
+        "ci_high": -0.04832599519135772
+      }
+    },
+    "balanced_ratio": 0.9716565685090524,
+    "regime_guard_passed": true,
+    "does_not_reselect": true
+  },
+  "representation": {
+    "projector_distance_from_reference": 0.0,
+    "basis_coefficients": 8192,
+    "gain_coefficients": 64,
+    "dictionary_is_shared": true
+  },
+  "calibrated_metrics": {
+    "calibrated-k4": {
+      "artifact_id": "c073f9ce3c173a7e71089b10b746fb46b42eb19f70b061ac5abc5218c229efb0",
+      "calibration_hash": "41521becb793c47b32528c79aa45d0db87a32cd871f981cf48b7f64aa20e90b1",
+      "factor_shape": [
+        415,
+        128
+      ],
+      "factor_error": 0.0,
+      "normalised_score_error": 3.3306690738754696e-15,
+      "near_zero_count": 0,
+      "compressed_chart_is_exact_full_metric": false,
+      "neighbours": 4,
+      "epsilon": 0.01,
+      "normalisation": "symmetric",
+      "norm_floor": 1e-12,
+      "coordinate_id": "synthetic-path-features-v1"
+    },
+    "calibrated-k8": {
+      "artifact_id": "ddf3d722a9a5c6ca69ce2109d5cee9c182108f37bd2cacf54ca2e68f43e05043",
+      "calibration_hash": "41521becb793c47b32528c79aa45d0db87a32cd871f981cf48b7f64aa20e90b1",
+      "factor_shape": [
+        694,
+        128
+      ],
+      "factor_error": 0.0,
+      "normalised_score_error": 3.774758283725532e-15,
+      "near_zero_count": 0,
+      "compressed_chart_is_exact_full_metric": false,
+      "neighbours": 8,
+      "epsilon": 0.01,
+      "normalisation": "symmetric",
+      "norm_floor": 1e-12,
+      "coordinate_id": "synthetic-path-features-v1"
+    }
+  },
+  "data_hashes": {
+    "train": {
+      "smooth": {
+        "clean": "5d863d829ad9a87c7c41dc50049066fd8489ea7e3e64c2e619c8df0f525ff7e3",
+        "observed": "ad9c79a15214003042bc18a6a619759e1a8f76b1f1cef530dfb853a2d0527ca0"
+      },
+      "broadband": {
+        "clean": "df73a11ae35ebfb6da69c8b70e82d945e2d8a1987e9f0e1f3cc04fa3ac2f5732",
+        "observed": "ba0aacc68926c851ff8ddbf219c85ca10e2e77bb2998d4a6b2ed070254f95a66"
+      }
+    },
+    "development": {
+      "smooth": {
+        "clean": "7e869453767dd2841ce8903c0d0c84ab69c506b70064afeac1ab2f2da18f6574",
+        "observed": "00341131fdb598a12ed81246c5e6c694a47f4a1b2d2eee96e34a6a165c56d02a"
+      },
+      "broadband": {
+        "clean": "91815b9861a63f4fe34a9d5ec5ad8ab76f297f134697e0f50f691387947f22ac",
+        "observed": "4ba105e7350b1e7539b878d50d58dbbca1a974fcb7a3baf587c9261818a426f6"
+      }
+    },
+    "audit": {
+      "smooth": {
+        "clean": "397d0f98f99b58f0d5dd84e4e953d350243841fbedb43611900170061780efe2",
+        "observed": "133b10950d06980fccf485f3bb6c66869427e22649fb74fcc36c007f45566e87"
+      },
+      "broadband": {
+        "clean": "b9417a6c90b11706b844a1c74190edd4b1d85806fb5d3cb849223267b65d5b0b",
+        "observed": "a2710ceb29801765bc5b1dc6009ab491a4bdb29e1f224b981048881bf7448440"
+      }
+    }
+  },
+  "provenance": {
+    "python": "3.13.12",
+    "numpy": "2.5.1",
+    "source_sha256": {
+      "autoresearch.md": "c8ab3e57ea032c810646c6f40159bc50e7c5eb5bf1505e07dcf88d57c2484ee3",
+      "autoresearch.sh": "8084bd2ab655707d8e79203cde80e8a925106fed3317f86b80902273f34f0fa6",
+      "src/ald_sc/representation_search.py": "7c44bca9cda549e09740f2276161e6ba62367f5a97bd692b408c0f6e90c67ed5",
+      "src/ald_sc/calibrated_metric.py": "04adac75a4005b3e84bade8d6efd3d6f202ea1e25eda6e60b2c712947e33a838",
+      "src/ald_sc/prime_gating.py": "26e3842e80e0d9a52df4e9fd522357e4408033313a6692ab96a6b89e34b763d0",
+      "src/ald_sc/__init__.py": "303122882851cec1d77496fc3ae66b4edcb44996c704299dc5d52ec77a80060a",
+      "scripts/run_representation_search.py": "881e95bcf1e69faf7b0b8d6f5f4af4aa74e1a87ea7ae9d8a1afdd7a2d59aa5b1",
+      "pyproject.toml": "3c004159549e9481694596b9317c8152256ef0769647dfe98af8a376299e8c47",
+      "uv.lock": "8fb4d91d3490b42ce7b4e3422136d28fc5061664062ded11e88d5b967db546da"
+    },
+    "log_sha256": "81eaac2ff832d0e7ab3ca4f165d6420d2f31b2f672802c9379307d370f27f1e8",
+    "artifact_sha256": {
+      "audit-outcomes.npz": "9fb098e2ac0b1122ebff7129ece4057a8e7d13a5a7f58a0e28bf8aadda7e1d03",
+      "calibrated-metrics.npz": "e77e36e0a6fd7f46c41354c10dca926b898b10fc719b5baf3cfeab261e60460e",
+      "candidate-bases.npz": "b44eb60425bda15d5ec29ebe924db676fa1c86073feaa098ce38601e3aa3d2b9",
+      "representation.npz": "7df8ebaee0841369caddf991578ef3fba9e616830dd9bd24b7496914f375063a",
+      "selection.json": "b9ee112c73a5233e4884c556a80ce99641cd416c0ae457fc6e263e03bf5cea29"
+    }
+  },
+  "elapsed_seconds": 0.2360717499977909,
+  "scope": "Best tested fixed-budget synthetic linear reconstruction configuration, not real-image quality"
+}
