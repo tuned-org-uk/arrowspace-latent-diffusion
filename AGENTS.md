@@ -62,7 +62,7 @@ compression than decoding on an unconstrained ambient latent.
 
 ### Version 2 entry points
 
-The current code version is **2.0.1**. Start with `docs/00-DESIGN.md`,
+The current code version is **2.0.2**. Start with `docs/00-DESIGN.md`,
 `docs/v2-migration.md` and `docs/paper/ald-sc-v2.tex` for the current design.
 `SpectralVAE` now requires its frozen prior at construction and eagerly creates
 the graph decoder. Modal gates (`heat`, `envelope`, `prime`, `phase-00` through

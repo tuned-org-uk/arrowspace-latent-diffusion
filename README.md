@@ -1,4 +1,4 @@
-# Arrowspace Latent Diffusion (ALD-SC) v2.0.1
+# Arrowspace Latent Diffusion (ALD-SC) v2.0.2
 
 **ArrowSpace Latent Diffusion with Spectral Chart Conditioning** — a
 spectral latent diffusion model in which decoding is performed on the
@@ -255,16 +255,39 @@ uv run python scripts/sample.py --steps 50 --seed 3407 --epochs 20 --out results
 
 ### Notebooks
 
-| # | Notebook | Description |
-|---|----------|-------------|
-| 01 | `01_noise_schedule.ipynb` | Cosine/linear schedules, v-prediction, forward corruption |
-| 02 | `02_arrow_prior.ipynb` | Frozen ArrowSpace prior, eigenvalues, projector, c_spec |
-| 03 | `03_spectral_vae.ipynb` | VAE training, reconstruction, band-energy comparison |
-| 04 | `04_dit_conditioning.ipynb` | DiT velocity prediction, c_spec sensitivity, CFG dropout |
-| 05 | `05_train_diffusion.ipynb` | Latent diffusion training, v-prediction loss |
-| 06 | `06_sampling.ipynb` | DDIM sampling, with-vs-without c_spec ablation |
-| 07 | `07_spectral_schedule.ipynb` | Per-mode entropic schedule, heat-death criterion |
-| 08 | `08_graph_decoder.ipynb` | Graph decoder vs clock-gated decoder at different times |
+**To see the model generate images**, open [From Gaussian noise to handwritten digits](notebooks/09_generation_filmstrip.ipynb)
+or [play the animation](docs/examples/digit-generation/generation.gif). Follow the same eight
+samples from the initial noise to the final decoded images. The [numbered PNGs](docs/examples/digit-generation/frames)
+and [run details](docs/examples/digit-generation/run.json) are available separately.
+
+| Notebook | Data and demonstration |
+|---|---|
+| [01 · Noise schedule](notebooks/01_noise_schedule.ipynb) | Random latent: forward corruption, cosine/linear schedules and velocity targets. |
+| [02 · Frozen prior](notebooks/02_arrow_prior.ipynb) | Toy embeddings: graph eigenvalues, projector and chart energies. |
+| [03 · Spectral VAE](notebooks/03_spectral_vae.ipynb) | Gaussian-noise images: train an autoencoder and compare inputs, reconstructions and band energies. |
+| [04 · DiT conditioning](notebooks/04_dit_conditioning.ipynb) | Random latent and descriptors: conditioning swaps, dropout and velocity predictions. |
+| [05 · Diffusion training](notebooks/05_train_diffusion.ipynb) | Gaussian-noise images: fit the denoiser and compare predicted and target velocity. |
+| [06 · Sampling](notebooks/06_sampling.ipynb) | Toy VAE and denoiser: static generated images, conditioning ablation and five snapshots of one **latent channel**. |
+| [07 · Spectral schedule](notebooks/07_spectral_schedule.ipynb) | Toy prior: external versus modal time, common cosine attenuation and stopping criterion. |
+| [08 · Graph decoder](notebooks/08_graph_decoder.ipynb) | Random latent: compare graph and clock-gated decoders at different times. |
+| [v2 · Encoding quality](notebooks/01-v2-encoding-quality.ipynb) | Synthetic graph signals: held-out reconstruction under graph, PCA and random bases. |
+| [v2 · Prime decoding](notebooks/02-v2-prime-decoding.ipynb) | Synthetic signals: matched spectral filters and controls; random-image neural integration check. |
+| [09 · Generation filmstrip](notebooks/09_generation_filmstrip.ipynb) | Real 8 × 8 handwritten digits: fit a graph VAE and latent denoiser, decode each sampling step, export and play the frames. |
+
+The original 01–08 notebooks are stored without cell outputs. The two v2
+studies and the filmstrip include their executed outputs. The current model
+and datasets demonstrated here are image- or graph-based; there is no audio
+generation notebook.
+
+To reproduce the filmstrip from the repository root:
+
+```bash
+uv run --locked --group notebooks jupyter execute notebooks/09_generation_filmstrip.ipynb --inplace --timeout=900
+```
+
+The notebook uses a checksum-verified digits CSV (cached locally after the first
+download) and trains on CPU. The animation shows a denoising trajectory, not a
+video model predicting motion. Its held-out error measures reconstruction only.
 
 ---
 
@@ -279,7 +302,7 @@ arrowspace-latent-diffusion/
 │   ├── 01.md                     # design document — ESDM transfer
 │   └── paper/
 │       └── ald-sc.tex            # the paper
-├── notebooks/                    # 01–08 (numbered milestones)
+├── notebooks/                    # 01–09 milestones and two v2 studies
 ├── scripts/
 │   └── sample.py                 # CLI image generation
 ├── src/ald_sc/

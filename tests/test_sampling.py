@@ -6,7 +6,7 @@ import torch
 
 from ald_sc.dit import MinimalDiT
 from ald_sc.schedule import CosineSchedule
-from ald_sc.sampling import sample_euler, sample_ddim
+from ald_sc.sampling import sample_euler, sample_ddim, sample_ddim_steps
 
 
 def _make_dit(
@@ -48,6 +48,26 @@ class TestSampleEuler:
 
 
 class TestSampleDDIM:
+    def test_oracle_velocity_follows_one_fixed_noise_trajectory(self) -> None:
+        schedule = CosineSchedule(num_steps=12)
+
+        class ZeroCleanOracle(torch.nn.Module):
+            latent_channels = latent_size = 1
+
+            def forward(self, x, t, c_spec=None):
+                alpha = schedule[t].view(-1, 1, 1, 1)
+                return (alpha / (1 - alpha)).sqrt() * x
+
+        times = schedule.sample_sigmas(4)
+        model = ZeroCleanOracle()
+        frames = list(sample_ddim_steps(model, schedule, steps=4))
+        # For a clean latent of zero, every frame is the same epsilon times
+        # sqrt(1-alpha_t), including the nonzero endpoint of this coarse grid.
+        noise = frames[0] / (1 - schedule[times[0]]).sqrt()
+        for latent, time in zip(frames, times, strict=True):
+            torch.testing.assert_close(latent, noise * (1 - schedule[time]).sqrt())
+        torch.testing.assert_close(sample_ddim(model, schedule, steps=4), frames[-1])
+
     def test_output_shape(self) -> None:
         torch.manual_seed(3407)
         dit = _make_dit()

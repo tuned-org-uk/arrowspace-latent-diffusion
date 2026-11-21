@@ -22,7 +22,7 @@ from ald_sc.spectral_schedule import SpectralSchedule
 from ald_sc.vae import SpectralVAE
 from ald_sc.wire_graph import WireGraph
 
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 __all__ = [
     "ArrowSpacePrior",
