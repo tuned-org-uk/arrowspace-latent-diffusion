@@ -1,0 +1,32 @@
+{
+  "completed_utc": "2026-11-21T17:31:42.173154+00:00",
+  "kernel_python": ".venv/bin/python",
+  "packages": {
+    "nbclient": "0.11.0",
+    "nbformat": "5.11.1",
+    "ipykernel": "7.4.0",
+    "torch": "2.13.0"
+  },
+  "notebooks": {
+    "notebooks/01-v2-encoding-quality.ipynb": {
+      "code_cells": 3,
+      "sha256": "dbf9f1f32e25194a72bffe6b12d8d0e3887d79686f818ad4953dfe9dadb88542"
+    },
+    "notebooks/02-v2-prime-decoding.ipynb": {
+      "code_cells": 5,
+      "sha256": "e85fe9d020294487e9362e6a18516d0a4d822f242b77c83d89f93b48db751264"
+    }
+  },
+  "artefact_sha256": {
+    "docs/paper/v2-results/clock-table.tex": "032098df96d155d101525be8a6ad42d877cd6a2ca9706cff023e77b91d22d7c5",
+    "docs/paper/v2-results/decoding-quality.pdf": "968932dffcd5276ddc80da9f016be5dfc035e3fe7380a15f22bc44b5cbc87716",
+    "docs/paper/v2-results/decoding-quality.png": "eb1d496986bf2add5e653764b75fc1be399c10ec77034013f1f0cd2ab5955520",
+    "docs/paper/v2-results/decoding-table.tex": "2db72e2cfd2739e99e64b6344605a5da730bcb961dec40bdb6865f6e3b58fce2",
+    "docs/paper/v2-results/encoding-quality.pdf": "ab8fed367bfbb2594c2d600c82d57e053a2b388af77b44c0f0beb171ca3d3a72",
+    "docs/paper/v2-results/encoding-quality.png": "6546403f58a666fe77c1add10a302a27d5a913255af915f0b498fd552ecb075c",
+    "docs/paper/v2-results/encoding-table.tex": "ca2e16f888496f3641e1678ede659f5901ac8291aa2da46152bf0bfca1a5ea42",
+    "docs/paper/v2-results/raw-outcomes.npz": "2eb3293b830791c74329096d21f6533c9fca70fbd76bfc38d1a92b9cd4580a64",
+    "docs/paper/v2-results/results.json": "e369436809068ede1d4d85051ac3a159d7c065ca11560ecc8ea5799c15829c89"
+  },
+  "status": "both full notebooks passed, including exporter parity and source hash checks"
+}

@@ -8,11 +8,10 @@ frozen Laplacian eigenvalue ν_k:
     ᾱ_k(τ_k) = cos²(π/2 · τ_k / τ_{k,max})
     τ_{k,max} = ν_k · T
 
-where T is the reference horizon. All modes formally reach equilibrium at
-the same external time T, but they traverse their trajectories at different
-rates: high-ν_k modes (rough, local detail) accumulate entropic time faster
-and cross the 1/2 transition earlier; low-ν_k modes (smooth, global
-structure) persist throughout the denoising trajectory.
+where T is the reference horizon. The eigenvalue cancels in this ratio:
+all modes follow the same cosine clock in external time. Version 2 keeps
+this common tempo separate from the mode-dependent ModalGate. The ratio
+is evaluated directly as t/T, including for a zero eigenvalue.
 
 The entropy rate is:
 
@@ -97,9 +96,8 @@ class SpectralSchedule(nn.Module):
         Tensor (q,)
             Per-mode alpha_bar. At t=0 all modes are 1; at t=T all modes are 0.
         """
-        tau = self.tau_k(t)
-        ratio = (tau / self.tau_k_max).clamp(0.0, 1.0)
-        return torch.cos(ratio * (math.pi / 2.0)).pow(2)
+        ratio = (t / self.horizon).clamp(0.0, 1.0)
+        return torch.cos(ratio * (math.pi / 2.0)).pow(2).expand_as(self.nu)
 
     def entropy_rate(self) -> Tensor:
         """Entropy exchange rate per mode: dS_k/dt = -ν_k.

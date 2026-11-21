@@ -25,7 +25,11 @@ class TestTrainVAE:
         embeddings = torch.randn(32, 16)
         prior = build_arrow_prior(embeddings, q=4, k=4)
         vae = SpectralVAE(
-            in_channels=3, latent_channels=4, feature_dim=16, base_channels=16
+            prior=prior,
+            in_channels=3,
+            latent_channels=4,
+            feature_dim=16,
+            base_channels=16,
         )
         loss_fn = ALDSCLoss(
             prior=prior, lambda_rec=1.0, lambda_chart=0.5, lambda_smooth=0.1
@@ -46,7 +50,11 @@ class TestTrainDiffusion:
         embeddings = torch.randn(32, 16)
         prior = build_arrow_prior(embeddings, q=4, k=4)
         vae = SpectralVAE(
-            in_channels=3, latent_channels=4, feature_dim=16, base_channels=16
+            prior=prior,
+            in_channels=3,
+            latent_channels=4,
+            feature_dim=16,
+            base_channels=16,
         )
         ALDSCLoss(prior=prior)
         loader = _make_dataloader(n=8, image_size=32)
@@ -79,7 +87,11 @@ class TestTrainDiffusion:
         embeddings = torch.randn(32, 16)
         prior = build_arrow_prior(embeddings, q=4, k=4)
         vae = SpectralVAE(
-            in_channels=3, latent_channels=4, feature_dim=16, base_channels=16
+            prior=prior,
+            in_channels=3,
+            latent_channels=4,
+            feature_dim=16,
+            base_channels=16,
         )
         loader = _make_dataloader(n=8, image_size=32)
         sched = CosineSchedule(num_steps=100)

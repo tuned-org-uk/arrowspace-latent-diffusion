@@ -60,6 +60,49 @@ compression than decoding on an unconstrained ambient latent.
 
 ## 2. Repository Layout
 
+### Version 2 entry points
+
+The current code version is **2.0.0**. Start with `docs/00-DESIGN.md`,
+`docs/v2-migration.md` and `docs/paper/ald-sc-v2.tex` for the current design.
+`SpectralVAE` now requires its frozen prior at construction and eagerly creates
+the graph decoder. Modal gates (`heat`, `envelope`, `prime`, `phase-00` through
+`phase-31`) are frozen buffers; they do not modify the graph eigenbasis.
+
+The two current demonstration notebooks are
+`notebooks/01-v2-encoding-quality.ipynb` and
+`notebooks/02-v2-prime-decoding.ipynb`. Use
+`uv sync --locked --group notebooks` and
+`uv run --locked --group notebooks python scripts/execute_v2_notebooks.py`.
+
+The protocol and receipt live in `docs/experiments/prime-gating-protocol.md`
+and `docs/paper/v2-results/`. Preserve all prescribed controls and report
+unfavourable outcomes. Finite prime-power enumeration is unconditional; RH
+motivates an asymptotic envelope shape, not a certified amplitude bound on
+graph modes. These synthetic experiments are not real-image evidence.
+The historical `SpectralSchedule` has a common cosine external-time ratio,
+not distinct per-mode noise trajectories.
+
+### Autoresearch version policy
+
+Publish the first implementation as 2.0.0. Each subsequent successful
+autoresearch promotion increments the patch version, updates both package
+metadata and `ald_sc.__version__`, and records the exact experiment-source
+commit and result hashes. Keep the experimental recipe/schema version separate
+from the package release version.
+
+A successful promotion must improve the declared objective against the current
+incumbent on a fresh held-out audit, pass the declared per-regime guard, and
+pass required software checks. A reproduction, failed run or development-only
+improvement does not earn a patch version. Preserve every trial log and failed
+comparison. Once an audit is inspected, do not tune on it and call it fresh.
+Subsequent searches must name the promoted incumbent and an unexposed audit
+namespace in their protocol.
+
+Use the Mec-iS GitHub account and commit attribution for this repository, as
+requested on 2026-11-21. Push changes on a branch and open a pull request.
+Do not change the existing origin transport merely to make the GitHub CLI
+recognise the repository; use the explicit repository name when needed.
+
 ```
 arrowspace-latent-diffusion/
 ├── pyproject.toml              # uv / hatchling project config

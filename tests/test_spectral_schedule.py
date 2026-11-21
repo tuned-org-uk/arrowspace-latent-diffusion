@@ -25,6 +25,19 @@ def _make_prior(f: int = 32, q: int = 8) -> ArrowSpacePrior:
 
 
 class TestSpectralSchedule:
+    def test_zero_eigenvalue_uses_finite_common_clock(self) -> None:
+        """A retained graph constant mode must not introduce a zero-over-zero."""
+        prior = ArrowSpacePrior(
+            torch.diag(torch.tensor([0.0, 1.0, 2.0, 3.0])),
+            torch.eye(4),
+            torch.tensor([0.0, 1.0, 2.0, 3.0]),
+            torch.ones(4),
+        )
+        schedule = SpectralSchedule(prior)
+        value = schedule.alpha_bar_k(torch.tensor(0.5))
+        torch.testing.assert_close(value, torch.full((4,), 0.5))
+        assert torch.isfinite(schedule.heat_death_metric(torch.tensor(0.5)))
+
     def test_construction_from_prior(self) -> None:
         prior = _make_prior(f=32, q=8)
         sched = SpectralSchedule(prior, horizon=1.0)

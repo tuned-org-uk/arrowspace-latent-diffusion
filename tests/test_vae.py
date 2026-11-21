@@ -19,6 +19,7 @@ class TestSpectralVAE:
     def test_forward_shapes(self) -> None:
         prior = _make_prior(f=32, q=8)
         vae = SpectralVAE(
+            prior=prior,
             in_channels=3,
             latent_channels=4,
             feature_dim=32,
@@ -34,6 +35,7 @@ class TestSpectralVAE:
     def test_gradient_flow(self) -> None:
         prior = _make_prior(f=32, q=8)
         vae = SpectralVAE(
+            prior=prior,
             in_channels=3,
             latent_channels=4,
             feature_dim=32,
@@ -50,6 +52,7 @@ class TestSpectralVAE:
     def test_c_spec_changes_with_input(self) -> None:
         prior = _make_prior(f=32, q=8)
         vae = SpectralVAE(
+            prior=prior,
             in_channels=3,
             latent_channels=4,
             feature_dim=32,
@@ -66,6 +69,7 @@ class TestSpectralVAE:
     def test_kl_loss(self) -> None:
         prior = _make_prior(f=32, q=8)
         vae = SpectralVAE(
+            prior=prior,
             in_channels=3,
             latent_channels=4,
             feature_dim=32,
