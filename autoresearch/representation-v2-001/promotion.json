@@ -1,0 +1,20 @@
+{
+  "version": "2.0.1",
+  "previous_version": "2.0.0",
+  "experiment_source_commit": "2879577485d5a25549009fa54f7e83bcc35962c2",
+  "report_sha256": "ce6a976f86bd527185577a9c665438b1862d52d092f6f9bfe02ba6affd965db5",
+  "representation_sha256": "7df8ebaee0841369caddf991578ef3fba9e616830dd9bd24b7496914f375063a",
+  "qualification": {
+    "audit_selected_before_inspection": true,
+    "balanced_mse_improvement_percent": 2.8343431490947646,
+    "smooth_mse_change_percent": 1.488890412805599,
+    "broadband_mse_change_percent": -7.157576710995118,
+    "per_regime_regression_limit_percent": 2.0,
+    "regime_guard_passed": true,
+    "software_tests_passed": 186
+  },
+  "scope": "Synthetic fixed-budget linear reconstruction; selected graph basis with training-fitted diagonal gains",
+  "verification": "Compare recorded experiment source hashes against experiment_source_commit, not against later package metadata",
+  "audit_namespace_now_exposed": [3407, 20, 2],
+  "neural_default_changed": false
+}

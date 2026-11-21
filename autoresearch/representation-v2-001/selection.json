@@ -1,0 +1,28 @@
+{
+  "trial": 4,
+  "basis": "graph",
+  "recipe": {
+    "family": "training-fitted-quadratic"
+  },
+  "basis_recipe": {
+    "construction": "analytical-path"
+  },
+  "mse": {
+    "smooth": 0.06185902179226428,
+    "broadband": 0.6317890609122488
+  },
+  "score": 0.9720759133803665,
+  "eligible": true,
+  "decision": "keep",
+  "decision_reason": "improved eligible score",
+  "basis_hash": "986987cf28c591e5c3e93752203c7bb1c23b6f45fadb1496209ec282454734c2",
+  "gain_hash": "dbe65cc874ebe428a1c5cbd5fdfda06c46c62aa850c67a644bca2f647e59cc06",
+  "coefficient_count": 64,
+  "squared_gain_norm": 26.78664225938936,
+  "evaluation_seconds": 0.0004991249879822135,
+  "trial_count": 96,
+  "reference_dev_mse": {
+    "smooth": 0.06088980990623989,
+    "broadband": 0.6806352923038091
+  }
+}

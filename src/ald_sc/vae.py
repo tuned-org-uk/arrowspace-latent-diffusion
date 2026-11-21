@@ -16,6 +16,8 @@ import torch
 from torch import Tensor, nn
 
 from ald_sc.arrow_prior import ArrowSpacePrior
+from ald_sc.graph_decoder import GraphDecoder
+from ald_sc.modal_gate import _check_modal_recipes
 
 __all__ = ["SpectralVAE"]
 
@@ -45,6 +47,8 @@ class SpectralVAE(nn.Module):
 
     Parameters
     ----------
+    prior : ArrowSpacePrior
+        Frozen prior bound at construction; determines the decoder chart.
     in_channels : int
         Input image channels (e.g. 3 for RGB).
     latent_channels : int
@@ -53,16 +57,23 @@ class SpectralVAE(nn.Module):
         Feature field dimension F (must match the prior).
     base_channels : int
         Base width for conv layers.
+    gate_kind : str
+        Fixed v2 modal recipe: heat, envelope, prime or a phase control.
     """
 
     def __init__(
         self,
+        prior: ArrowSpacePrior,
         in_channels: int = 3,
         latent_channels: int = 4,
         feature_dim: int = 256,
         base_channels: int = 64,
+        gate_kind: str = "heat",
     ) -> None:
         super().__init__()
+        if prior.F != feature_dim:
+            raise ValueError("feature_dim must match the frozen prior")
+        self.prior = prior
         self.in_channels = in_channels
         self.latent_channels = latent_channels
         self.feature_dim = feature_dim
@@ -82,30 +93,15 @@ class SpectralVAE(nn.Module):
         self.feature_head = nn.AdaptiveAvgPool2d(1)
         self.feature_proj = nn.Linear(ch * 4, feature_dim)
 
-        # Decoder
-        self.dec_in = nn.Conv2d(latent_channels, ch * 4, 1)
-        self.dec1 = ResBlock(ch * 4, ch * 4)
-        self.dec2 = ResBlock(ch * 4, ch * 2)
-        self.dec3 = ResBlock(ch * 2, ch)
-        self.dec_out = nn.Conv2d(ch, in_channels, 3, padding=1)
-
-        # Spectral gating: g = sigma(W * c_spec + b)
-        # c_spec dim = 3 * q, but we don't know q at init time,
-        # so we build the gate lazily on first forward.
-        self._spectral_gate: nn.Linear | None = None
+        self.decoder = GraphDecoder(
+            latent_channels, in_channels, feature_dim, ch, prior, gate_kind=gate_kind
+        )
+        self.register_load_state_dict_pre_hook(_check_modal_recipes)
 
         self._last_mu: Tensor | None = None
         self._last_logvar: Tensor | None = None
 
-    def _get_spectral_gate(self, c_spec_dim: int, device: torch.device) -> nn.Linear:
-        if self._spectral_gate is None:
-            self._spectral_gate = nn.Linear(c_spec_dim, self.base_channels * 4).to(
-                device
-            )
-            nn.init.zeros_(self._spectral_gate.bias)
-        return self._spectral_gate
-
-    def encode(self, x: Tensor) -> tuple[Tensor, Tensor, Tensor]:
+    def encode(self, x: Tensor) -> tuple[Tensor, Tensor, Tensor, Tensor]:
         """Encode image to (z, A, mu, logvar).
 
         Returns
@@ -154,21 +150,9 @@ class SpectralVAE(nn.Module):
         Tensor (B, in_channels, H, W)
             Reconstructed image.
         """
-        h = self.dec_in(z)
-
-        # Spectral gating at the top decoder level
-        gate_proj = self._get_spectral_gate(c_spec.shape[-1], h.device)
-        g = torch.sigmoid(gate_proj(c_spec))
-        g = g.unsqueeze(-1).unsqueeze(-1)
-        h = h * (1 + g)
-
-        h = self.dec1(h)
-        h = nn.functional.interpolate(h, scale_factor=2, mode="nearest")
-        h = self.dec2(h)
-        h = nn.functional.interpolate(h, scale_factor=2, mode="nearest")
-        h = self.dec3(h)
-        x_hat = self.dec_out(h)
-        return x_hat
+        if prior is not self.prior:
+            raise ValueError("decode must use the prior bound at model construction")
+        return self.decoder(z, c_spec)
 
     def forward(
         self, x: Tensor, prior: ArrowSpacePrior

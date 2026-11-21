@@ -45,6 +45,11 @@ def main() -> None:
         "--feature-dim", type=int, default=32, help="Feature dimension F"
     )
     parser.add_argument("--q", type=int, default=8, help="Spectral modes")
+    parser.add_argument(
+        "--gate",
+        default="heat",
+        help="v2 modal gate: heat, envelope, prime, or phase-00 to phase-31",
+    )
     args = parser.parse_args()
 
     torch.manual_seed(args.seed)
@@ -55,10 +60,12 @@ def main() -> None:
 
     print("Creating VAE...")
     vae = SpectralVAE(
+        prior=prior,
         in_channels=3,
         latent_channels=args.latent_channels,
         feature_dim=args.feature_dim,
         base_channels=32,
+        gate_kind=args.gate,
     )
     loss_fn = ALDSCLoss(
         prior=prior, lambda_rec=1.0, lambda_chart=0.5, lambda_smooth=0.1

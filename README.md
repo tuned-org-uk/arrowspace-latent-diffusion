@@ -1,4 +1,4 @@
-# Arrowspace Latent Diffusion (ALD-SC)
+# Arrowspace Latent Diffusion (ALD-SC) v2.0.1
 
 **ArrowSpace Latent Diffusion with Spectral Chart Conditioning** — a
 spectral latent diffusion model in which decoding is performed on the
@@ -14,11 +14,94 @@ defines the valid semantic subspace, and the decoder reconstructs along
 the graph's smooth directions rather than through unconstrained
 convolutions.
 
-> **Central claim:** decoding on the feature-space manifold
+> **Research hypothesis:** decoding on the feature-space manifold
 > $(L_F, \lambda^{\mathrm{ED}})$ yields better global semantic coherence
 > under compression than decoding on an unconstrained ambient latent.
 
 ---
+
+## Version 2 study
+
+Version 2 connects the VAE to the graph decoder and adds frozen **heat,
+RH-envelope, prime-error and phase-control modal gates**. The prime construction
+changes individual mode weights, rather than merely changing a shared clock.
+The Riemann Hypothesis (RH) motivates an asymptotic envelope shape; finite
+prime-power sums are computed directly. No RH proof or trained image-quality
+improvement is claimed.
+
+- [Revised manuscript](docs/paper/ald-sc-v2.tex)
+- [Encoding-quality notebook](notebooks/01-v2-encoding-quality.ipynb):
+  graph basis versus train-only PCA and a random basis, at fixed coefficient counts.
+- [Prime-decoding notebook](notebooks/02-v2-prime-decoding.ipynb):
+  matched filter budgets, all 32 phase controls, common-clock invariance and an
+  actual v2 neural forward/backward update.
+- [Numerical protocol](docs/experiments/prime-gating-protocol.md)
+- [Migration notes](docs/v2-migration.md)
+- [Parallel work items](docs/v2-work-items.md)
+
+The numerical quality study uses **synthetic path-graph signals**. The neural
+update is an integration check; real-image encoding and generative quality
+remain separate experiments.
+
+```bash
+uv sync --locked --group notebooks
+uv run --locked python scripts/run_prime_study.py
+uv run --locked --group notebooks python scripts/execute_v2_notebooks.py
+```
+
+The study writes raw outcomes, source hashes, figures and manuscript tables to
+`docs/paper/v2-results/`. Build the paper from `docs/paper/` with
+`latexmk -pdf ald-sc-v2.tex`.
+
+## Representation autoresearch
+
+The separate [adaptive-search protocol](autoresearch.md) compares 64-coefficient
+representations, including calibration-fitted frozen feature metrics, under a
+matched filter-noise budget. It fits graphs and decoder gains on training
+signals, selects on development signals, seals the choice, and then audits it.
+
+The loop supports up to 96 evaluations and records every keep/discard decision
+in `autoresearch.jsonl`. Successful runs are published as patch versions after
+the baseline; each must retain its fresh audit and any regime regressions.
+
+The [first promoted run](autoresearch/representation-v2-001/results.md) is
+`v2.0.1`: it retains the graph basis and fits diagonal decoder gains.
+Fresh-audit balanced MSE improved by 2.83%, with a 1.49% smooth-regime regression
+and a 7.16% broadband improvement. The smooth regression passed the predefined
+2% guard. This is a filtering result on synthetic signals, not evidence of a
+better encoded subspace or a trained image model.
+
+[`autoresearch/current.json`](autoresearch/current.json) identifies the research
+incumbent. The promotion receipt pins the v2.0.0 commit used to generate the
+experiment; its source hashes are checked against that historical commit.
+
+Run with `./autoresearch.sh`. Existing output and log paths are deliberately
+protected. Explicit new paths reproduce the same fixed seed streams:
+
+```bash
+./autoresearch.sh --out autoresearch/reproduction-001 --log autoresearch/reproduction-001.jsonl
+```
+
+Such a reproduction does not create a newly unexposed audit set. Any further
+adaptive search needs a newly specified protocol and independent audit namespace.
+The selected encoder and gains are saved in `representation.npz`; the complete
+feature-metric factors, all candidate bases, raw audit errors and source hashes
+are preserved alongside it.
+
+## Model construction
+
+```python
+from ald_sc import SpectralVAE
+
+# prior is a frozen ArrowSpacePrior with at least four retained modes.
+vae = SpectralVAE(prior=prior, feature_dim=prior.F, gate_kind="prime")
+# Construct the optimiser after the model; all decoder parameters already exist.
+```
+
+The default `gate_kind="heat"` is the reference arm. `envelope`, `prime` and
+`phase-00` through `phase-31` select the fixed comparison recipes. Version 1
+checkpoints require retraining or an explicitly reviewed conversion because the
+decoder architecture has changed.
 
 ## The research programme
 
@@ -89,13 +172,14 @@ item-space geometry with feature-space topology.
 The `WaveReconstructionBlock` at each resolution:
 1. Pool feature activations → $A$
 2. Project to chart: $\hat{H} = A \cdot U_q$ (decode along smooth directions)
-3. Gate by dispersion: $g = \sigma(W \cdot c_{\mathrm{spec}})$ (energy allocation)
+3. Gate by dispersion and the selected fixed v2 modal gains (energy allocation)
 4. Lift back: $A' = (\hat{H} \odot g) \cdot U_q^\top$ (reconstruct in feature space)
 5. Residual conv update
 
-The `ClockGatedGraphDecoder` modulates gate strength by
-$\bar\alpha_k(t)$: early in denoising (high noise) gates are weak; late
-(low noise) gates are strong.
+The `ClockGatedGraphDecoder` also applies a common cosine tempo: early in
+denoising (high noise) updates are weak; late (low noise) updates are strong.
+Its historical ratio cancels the eigenvalue, so this tempo is not a
+mode-specific clock. `ModalGate` supplies the distinct v2 mode weights.
 
 ---
 
@@ -106,10 +190,11 @@ $\bar\alpha_k(t)$: early in denoising (high noise) gates are weak; late
 | ArrowSpace adapter | `wire_graph.py` | $L_F$ + $\lambda^{\mathrm{ED}}$ via pyarrowspace or kNN fallback |
 | Frozen prior | `arrow_prior.py`, `build_prior.py` | $L_F$, $U_q$, $\Pi_q$, $c_{\mathrm{spec}}$ as buffers (zero `nn.Parameter`) |
 | 2.5-D encoding target | `dual_space.py` | $M_N = \alpha\|VV^\top\|_F - \beta\|V L_F V^\top\|_F$ |
-| Spectral VAE | `vae.py` | Dual-head encoder (spatial + feature), legacy single-gate decoder |
+| Spectral VAE | `vae.py` | Dual-head encoder with eagerly constructed v2 graph decoder |
 | DiT denoiser | `dit.py` | Patchify + AdaLN + CFG dropout on $c_{\mathrm{spec}}$ |
 | Schedules | `schedule.py` | Cosine + linear, v-prediction (`add_noise`, `v_target`) |
 | Graph decoder | `graph_decoder.py` | `WaveReconstructionBlock`, `GraphDecoder`, `ClockGatedGraphDecoder` |
+| Modal gates | `modal_gate.py`, `prime_gating.py` | Frozen positive, noise-budget-matched filters and numerical study |
 | Entropic clock | `spectral_schedule.py` | $\tau_k(t)$, $\bar\alpha_k(t)$, heat-death stopping criterion |
 | Samplers | `sampling.py` | DDIM + Euler with spectral stopping criterion |
 | Losses | `losses.py` | $L_{\mathrm{diff}}$ + $L_{\mathrm{rec}}$ + $L_{\mathrm{chart}}$ + $L_{\mathrm{smooth}}$ + $L_{\mathrm{kl}}$ |
@@ -117,7 +202,7 @@ $\bar\alpha_k(t)$: early in denoising (high noise) gates are weak; late
 | Data | `data.py` | `ImageFolderDataset`, `ToyImageDataset`, `build_dataloader()` |
 | CLI | `scripts/sample.py` | End-to-end image generation |
 
-**107 unit tests**, all on CPU. `uv run pytest tests/ -v`.
+CPU tests: `uv run pytest tests/ -v`.
 
 ---
 
@@ -154,7 +239,7 @@ uv sync
 ## Usage
 
 ```bash
-# Run the test suite (CPU; 107 tests)
+# Run the test suite (CPU)
 uv run pytest tests/ -v
 
 # Lint and format

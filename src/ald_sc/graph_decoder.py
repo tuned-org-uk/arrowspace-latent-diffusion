@@ -25,6 +25,7 @@ import torch
 from torch import Tensor, nn
 
 from ald_sc.arrow_prior import ArrowSpacePrior
+from ald_sc.modal_gate import ModalGate, _check_modal_recipes
 from ald_sc.spectral_schedule import SpectralSchedule
 
 __all__ = ["WaveReconstructionBlock", "GraphDecoder"]
@@ -78,7 +79,9 @@ class WaveReconstructionBlock(nn.Module):
         self.act = nn.SiLU()
         self.conv = nn.Conv2d(channels, channels, 3, padding=1)
 
-    def forward(self, h: Tensor, c_spec: Tensor) -> Tensor:
+    def forward(
+        self, h: Tensor, c_spec: Tensor, mode_gains: Tensor | None = None
+    ) -> Tensor:
         """Apply wave-based reconstruction.
 
         Parameters
@@ -87,6 +90,8 @@ class WaveReconstructionBlock(nn.Module):
             Feature activations.
         c_spec : Tensor (B, 3*q)
             Spectral conditioning vector [ẽ, λ_chart, ν].
+        mode_gains : Tensor (q,), optional
+            Frozen v2 modal filter, multiplied into the learned chart gate.
 
         Returns
         -------
@@ -101,6 +106,8 @@ class WaveReconstructionBlock(nn.Module):
         H_hat = A @ self.U_q
 
         g = torch.sigmoid(self.gate(c_spec))
+        if mode_gains is not None:
+            g = g * mode_gains
 
         gated = H_hat * g
 
@@ -145,9 +152,12 @@ class GraphDecoder(nn.Module):
         feature_dim: int,
         base_channels: int,
         prior: ArrowSpacePrior,
+        gate_kind: str = "heat",
     ) -> None:
         super().__init__()
         self.prior = prior
+        self.spectral_gate = ModalGate(prior, gate_kind)
+        self.register_load_state_dict_pre_hook(_check_modal_recipes)
 
         ch = base_channels
 
@@ -197,16 +207,17 @@ class GraphDecoder(nn.Module):
         Tensor (B, out_channels, H, W)
         """
         h = self.dec_in(z)
+        mode_gains = self.spectral_gate()
 
-        h = self.wave_block_1(h, c_spec)
+        h = self.wave_block_1(h, c_spec, mode_gains)
         h = self.dec1(h)
         h = nn.functional.interpolate(h, scale_factor=2, mode="nearest")
 
-        h = self.wave_block_2(h, c_spec)
+        h = self.wave_block_2(h, c_spec, mode_gains)
         h = self.dec2(h)
         h = nn.functional.interpolate(h, scale_factor=2, mode="nearest")
 
-        h = self.wave_block_3(h, c_spec)
+        h = self.wave_block_3(h, c_spec, mode_gains)
         h = self.dec3(h)
 
         x_hat = self.dec_out(h)
@@ -251,10 +262,13 @@ class ClockGatedGraphDecoder(nn.Module):
         base_channels: int,
         prior: ArrowSpacePrior,
         spectral_schedule: SpectralSchedule,
+        gate_kind: str = "heat",
     ) -> None:
         super().__init__()
         self.prior = prior
         self.spectral_schedule = spectral_schedule
+        self.spectral_gate = ModalGate(prior, gate_kind)
+        self.register_load_state_dict_pre_hook(_check_modal_recipes)
 
         ch = base_channels
 
@@ -318,18 +332,19 @@ class ClockGatedGraphDecoder(nn.Module):
         tempo = ab_k.mean()
 
         h = self.dec_in(z)
+        mode_gains = self.spectral_gate()
 
-        h_raw = self.wave_block_1(h, c_spec)
+        h_raw = self.wave_block_1(h, c_spec, mode_gains)
         h = h + tempo * (h_raw - h)
         h = self.dec1(h)
         h = nn.functional.interpolate(h, scale_factor=2, mode="nearest")
 
-        h_raw = self.wave_block_2(h, c_spec)
+        h_raw = self.wave_block_2(h, c_spec, mode_gains)
         h = h + tempo * (h_raw - h)
         h = self.dec2(h)
         h = nn.functional.interpolate(h, scale_factor=2, mode="nearest")
 
-        h_raw = self.wave_block_3(h, c_spec)
+        h_raw = self.wave_block_3(h, c_spec, mode_gains)
         h = h + tempo * (h_raw - h)
         h = self.dec3(h)
 
