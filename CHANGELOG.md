@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.2 — 2026-11-21
+
+- Add a handwritten-digit generation notebook with a replayable sequence of
+  decoded sampling states. Both the training data and the sampling seed are
+  identified in the run.
+- Correct the deterministic DDIM update for a velocity-predicting model: carry
+  forward the inferred noise, rather than the velocity itself. The endpoint
+  and frame iterator now use the same implementation. Samples from old
+  revisions can therefore differ even with the same seed.
+
 ## 2.0.1 — 2026-11-21
 
 ### Qualified autoresearch result

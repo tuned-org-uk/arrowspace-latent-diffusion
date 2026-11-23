@@ -156,51 +156,19 @@ def sample_ddim(
     Tensor (B, latent_channels, latent_size, latent_size)
         If return_steps, returns (z, steps_used).
     """
-    gen = torch.Generator(device=device).manual_seed(seed)
-    model = model.to(device).eval()
-    if c_spec is not None:
-        c_spec = c_spec.to(device)
-
-    sigmas = schedule.sample_sigmas(steps).to(device)
-
-    latent_channels = getattr(model, "latent_channels", 4)
-    latent_size = getattr(model, "latent_size", 32)
-
-    x = torch.randn(
-        batch_size,
-        latent_channels,
-        latent_size,
-        latent_size,
-        device=device,
-        generator=gen,
+    trajectory = sample_ddim_steps(
+        model, schedule, c_spec, batch_size, steps, seed, device, spectral_schedule
     )
-
+    x = next(trajectory)
     steps_used = 0
-    for sig, sig_prev in _pairwise(sigmas.tolist()):
-        if spectral_schedule is not None:
-            t_frac = sig / schedule.num_steps
-            if spectral_schedule.is_heat_death(torch.tensor(t_frac, device=device)):
-                break
+    for x in trajectory:
         steps_used += 1
-        t = torch.full((batch_size,), int(sig), device=device, dtype=torch.long)
-        v = model(x, t, c_spec=c_spec)
-
-        ab = schedule.alpha_bar[int(sig)]
-        ab_prev = schedule.alpha_bar[int(sig_prev)]
-        sqrt_ab = ab.sqrt()
-        sqrt_1mab = (1 - ab).sqrt()
-
-        z0_pred = sqrt_ab * x - sqrt_1mab * v
-
-        sqrt_ab_prev = ab_prev.sqrt()
-        sqrt_1mab_prev = (1 - ab_prev).sqrt()
-        x = sqrt_ab_prev * z0_pred + sqrt_1mab_prev * v
-
     if return_steps:
         return x, steps_used
     return x
 
 
+@torch.no_grad()
 def sample_ddim_steps(
     model: nn.Module,
     schedule: CosineSchedule,
@@ -252,5 +220,7 @@ def sample_ddim_steps(
 
         sqrt_ab_prev = ab_prev.sqrt()
         sqrt_1mab_prev = (1 - ab_prev).sqrt()
-        x = sqrt_ab_prev * z0_pred + sqrt_1mab_prev * v
+        # The model predicts velocity. DDIM transports the inferred noise.
+        eps_pred = sqrt_1mab * x + sqrt_ab * v
+        x = sqrt_ab_prev * z0_pred + sqrt_1mab_prev * eps_pred
         yield x
