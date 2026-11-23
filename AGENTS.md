@@ -72,7 +72,8 @@ The two current demonstration notebooks are
 `notebooks/01-v2-encoding-quality.ipynb` and
 `notebooks/02-v2-prime-decoding.ipynb`. Use
 `uv sync --locked --group notebooks` and
-`uv run --locked --group notebooks python scripts/execute_v2_notebooks.py`.
+`uv run --locked --group notebooks python scripts/execute_notebooks.py` to run
+all notebooks, including both v2 demonstrations.
 
 The protocol and receipt live in `docs/experiments/prime-gating-protocol.md`
 and `docs/paper/v2-results/`. Preserve all prescribed controls and report

@@ -1,4 +1,4 @@
-"""Execute both full v2 notebooks with this project's Python kernel."""
+"""Refresh the v2 study and execute all notebooks with the project's Python kernel."""
 
 from __future__ import annotations
 
@@ -18,10 +18,7 @@ from jupyter_client.kernelspec import KernelSpecManager
 from nbclient import NotebookClient
 
 ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOKS = (
-    ROOT / "notebooks/01-v2-encoding-quality.ipynb",
-    ROOT / "notebooks/02-v2-prime-decoding.ipynb",
-)
+NOTEBOOKS = tuple(sorted((ROOT / "notebooks").glob("*.ipynb")))
 
 
 def main() -> None:
@@ -44,9 +41,10 @@ def main() -> None:
     )
     out = ROOT / "docs/paper/v2-results"
     report = json.loads((out / "results.json").read_text(encoding="utf-8"))
+    (ROOT / "results").mkdir(exist_ok=True)
     executed = {}
     with tempfile.TemporaryDirectory(
-        prefix="v2-kernel-", dir=ROOT / ".venv"
+        prefix="notebook-kernel-", dir=ROOT / ".venv"
     ) as directory:
         spec_dir = Path(directory) / "ald-sc-project"
         spec_dir.mkdir()
@@ -68,21 +66,24 @@ def main() -> None:
             encoding="utf-8",
         )
         for path in NOTEBOOKS:
+            print(f"Executing {path.relative_to(ROOT)}", flush=True)
             notebook = nbformat.read(path, as_version=4)
             manager = AsyncKernelManager(
                 kernel_name="ald-sc-project",
                 transport="ipc",
+                # Kernel cwd differs from ours; both ends need the same socket path.
+                ip=str(Path(directory) / "ipc"),
                 kernel_spec_manager=KernelSpecManager(kernel_dirs=[directory]),
             )
             client = NotebookClient(
                 notebook,
                 km=manager,
-                timeout=600,
+                timeout=900,
                 allow_errors=False,
                 record_timing=False,
                 ipython_hist_file=":memory:",
             )
-            client.execute(cwd=str(ROOT), env=kernel_env, cleanup_kc=True)
+            client.execute(cwd=str(path.parent), env=kernel_env, cleanup_kc=True)
             nbformat.validate(notebook)
             # Replace only after successful execution of the entire notebook.
             temporary = path.with_suffix(".ipynb.tmp")
@@ -110,7 +111,7 @@ def main() -> None:
             for path in sorted(out.iterdir())
             if path.is_file() and path.name != "execution-receipt.json"
         },
-        "status": "both full notebooks passed, including exporter parity and source hash checks",
+        "status": "all notebooks passed, including v2 exporter parity and source hash checks",
     }
     (out / "execution-receipt.json").write_text(
         json.dumps(receipt, indent=2) + "\n", encoding="utf-8"

@@ -155,7 +155,7 @@ def save_results(encoding: dict, decoding: dict, out: Path) -> None:
         "src/ald_sc/arrow_prior.py",
         "src/ald_sc/spectral_schedule.py",
         "src/ald_sc/__init__.py",
-        "scripts/execute_v2_notebooks.py",
+        "scripts/execute_notebooks.py",
         "scripts/run_prime_study.py",
         "docs/experiments/prime-gating-protocol.md",
         "pyproject.toml",

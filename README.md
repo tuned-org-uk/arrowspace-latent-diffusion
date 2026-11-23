@@ -45,11 +45,11 @@ remain separate experiments.
 
 ```bash
 uv sync --locked --group notebooks
-uv run --locked python scripts/run_prime_study.py
-uv run --locked --group notebooks python scripts/execute_v2_notebooks.py
+uv run --locked --group notebooks python scripts/execute_notebooks.py
 ```
 
-The study writes raw outcomes, source hashes, figures and manuscript tables to
+The runner refreshes the study before executing all notebooks. The study
+writes raw outcomes, source hashes, figures and manuscript tables to
 `docs/paper/v2-results/`. Build the paper from `docs/paper/` with
 `latexmk -pdf ald-sc-v2.tex`.
 
@@ -274,10 +274,20 @@ and [run details](docs/examples/digit-generation/run.json) are available separat
 | [v2 · Prime decoding](notebooks/02-v2-prime-decoding.ipynb) | Synthetic signals: matched spectral filters and controls; random-image neural integration check. |
 | [09 · Generation filmstrip](notebooks/09_generation_filmstrip.ipynb) | Real 8 × 8 handwritten digits: fit a graph VAE and latent denoiser, decode each sampling step, export and play the frames. |
 
-The original 01–08 notebooks are stored without cell outputs. The two v2
-studies and the filmstrip include their executed outputs. The current model
-and datasets demonstrated here are image- or graph-based; there is no audio
-generation notebook.
+To execute every notebook from the repository root:
+
+```bash
+uv sync --locked --group notebooks
+uv run --locked --group notebooks python scripts/execute_notebooks.py
+```
+
+The runner discovers all `notebooks/*.ipynb` in filename order, refreshes the
+v2 study, and uses the project's `.venv` kernel. It saves successful outputs
+in place, stops on the first error, and allows 900 seconds per cell.
+The execution receipt is written to `docs/paper/v2-results/execution-receipt.json`.
+
+The current model and datasets demonstrated here are image- or graph-based;
+there is no audio generation notebook.
 
 To reproduce the filmstrip from the repository root:
 

@@ -1,5 +1,5 @@
 {
-  "completed_utc": "2026-11-21T17:43:40.686448+00:00",
+  "completed_utc": "2026-11-23T11:54:55.683112+00:00",
   "kernel_python": ".venv/bin/python",
   "packages": {
     "nbclient": "0.11.0",
@@ -10,11 +10,47 @@
   "notebooks": {
     "notebooks/01-v2-encoding-quality.ipynb": {
       "code_cells": 3,
-      "sha256": "f024d7e708427306343fda816f15be395cdca02a976dae0e21cba1a27b8b2e35"
+      "sha256": "c284e6465665f6ecfd0ed9aa2525942824b0b7f697ea87dc8f7a34d98221fb40"
+    },
+    "notebooks/01_noise_schedule.ipynb": {
+      "code_cells": 5,
+      "sha256": "3210676b0241ae5ddb60903b397afea6a2a8cc133f8406d75ddc5e9c11f2fce3"
     },
     "notebooks/02-v2-prime-decoding.ipynb": {
       "code_cells": 5,
-      "sha256": "8553a16ea83cd87db329c3de96e707e839a46b303c4112c64c242ef630b11aab"
+      "sha256": "d4948ba177283a6c6ca991ad4cd9cbd4edc4529ac16e36e0e46ab3937cfe66a9"
+    },
+    "notebooks/02_arrow_prior.ipynb": {
+      "code_cells": 6,
+      "sha256": "b0669c20f9b51308513f60c0ffdca03cc6bb9120e975d2c6272edcb6bd97b47c"
+    },
+    "notebooks/03_spectral_vae.ipynb": {
+      "code_cells": 5,
+      "sha256": "628500799968aa691f0efa1b387befb95ddc60a1bb195fff964724d47a2d8baf"
+    },
+    "notebooks/04_dit_conditioning.ipynb": {
+      "code_cells": 5,
+      "sha256": "6280bc40f43fb0f6a5a9f0631d02d77e736dd70856852a4f6245e122d13c817c"
+    },
+    "notebooks/05_train_diffusion.ipynb": {
+      "code_cells": 4,
+      "sha256": "2e3a170daf8f643afb0ec84984bc6e336bd755c8188dca13816bafb3e70df544"
+    },
+    "notebooks/06_sampling.ipynb": {
+      "code_cells": 5,
+      "sha256": "62645865054937e125d3bfb0e4772d5ab5d95cca8af3831840c9ba3af0f6f3d2"
+    },
+    "notebooks/07_spectral_schedule.ipynb": {
+      "code_cells": 6,
+      "sha256": "8748aff7a850dd9eff29e1e68355c76e5a577906b4955943e05a10bcc904e905"
+    },
+    "notebooks/08_graph_decoder.ipynb": {
+      "code_cells": 5,
+      "sha256": "3ee4bded0166dea03a0f0f762c6aac027907549695d3586e488e60d5b4159056"
+    },
+    "notebooks/09_generation_filmstrip.ipynb": {
+      "code_cells": 5,
+      "sha256": "a6b60f127ed10384afb7b0d081a6c40e952a73e3658d5c1810f7dd27973a9084"
     }
   },
   "artefact_sha256": {
@@ -26,7 +62,7 @@
     "docs/paper/v2-results/encoding-quality.png": "6546403f58a666fe77c1add10a302a27d5a913255af915f0b498fd552ecb075c",
     "docs/paper/v2-results/encoding-table.tex": "ca2e16f888496f3641e1678ede659f5901ac8291aa2da46152bf0bfca1a5ea42",
     "docs/paper/v2-results/raw-outcomes.npz": "2eb3293b830791c74329096d21f6533c9fca70fbd76bfc38d1a92b9cd4580a64",
-    "docs/paper/v2-results/results.json": "4e4e602380e2be07b8d213f5f162b6c4fe9c955e438161c84520321170d65ff9"
+    "docs/paper/v2-results/results.json": "6b86c76764d6ebfa21f2f694a9026350efd35b94016366925796300f2efce9e6"
   },
-  "status": "both full notebooks passed, including exporter parity and source hash checks"
+  "status": "all notebooks passed, including v2 exporter parity and source hash checks"
 }
